@@ -51,10 +51,10 @@ const Status = () => {
       <Space direction="vertical" style={{ maxWidth: "600px" }} size="large">
         <Typography style={{ color: "white" }}>
           <ul>
-            <li>Total supply of PIE: {status?.pie.totalSupply}</li>
-            <li>PIE emissions per day: {status?.pie.emission} </li>
-            <li>ONEO APR: --%</li>
-            <li>ONEO Locked: {status?.oneo.locked}</li>
+            <li>$PIE total supply: {status?.pie.totalSupply}</li>
+            <li>$PIE emissions per day: {status?.pie.emission} </li>
+            <li>$NEO Locked: {status?.oneo.locked}</li>
+            <li>$ONEO APR: --%</li>
           </ul>
         </Typography>
       </Space>
