@@ -96,10 +96,7 @@ const Teleport = () => {
   }, [neoWallet.connectedWallet]);
   return (
     <>
-      <Header
-        title="Teleport"
-        description="Move $NEO from N3 to Neo X."
-      />
+      <Header title="Teleport" description="Move $NEO from N3 to Neo X." />
       <Space direction="vertical" style={{ maxWidth: "600px" }} size="large">
         <Space direction="vertical">
           <Card>
@@ -149,7 +146,7 @@ const Teleport = () => {
               {evmWallet.isConnected ? (
                 <ConnectedWalletInput
                   address={evmWallet.address ? evmWallet.address : ""}
-                  walletIcon={`/${evmWallet.connector?.name}.svg`}
+                  walletIcon={evmWallet.connector?.icon}
                   walletName={
                     evmWallet.connector ? evmWallet.connector.name : ""
                   }

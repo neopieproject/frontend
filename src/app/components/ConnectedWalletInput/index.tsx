@@ -3,7 +3,7 @@ import React from "react";
 import Text from "antd/lib/typography/Text";
 interface IConnectedWalletInputProps {
   address: string;
-  walletIcon: string;
+  walletIcon?: string;
   walletName: string;
   onClear: () => void;
 }

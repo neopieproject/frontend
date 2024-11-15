@@ -3,8 +3,6 @@ import { Avatar, Button, Divider, List, Modal, message } from "antd";
 import React from "react";
 import { useConnect } from "wagmi";
 
-
-
 const EVMWallets = () => {
   const { evmWalletModalStatus, closeEvmWalletModal } = useApp();
   const { connectAsync, connectors, error } = useConnect();
@@ -35,23 +33,22 @@ const EVMWallets = () => {
       onCancel={closeEvmWalletModal}
     >
       <Divider />
-      <List
-        dataSource={connectors}
-        renderItem={(item) => (
+      <List>
+        {connectors.map((connector) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={`/${item.id}.svg`} />}
-              title={item.name}
+              avatar={<Avatar src={`${connector.icon}`} />}
+              title={connector.name}
             />
             <Button
               type="dashed"
-              onClick={() => connectWallet(item.id, closeEvmWalletModal)}
+              onClick={() => connectWallet(connector.id, closeEvmWalletModal)}
             >
               Connect
             </Button>
           </List.Item>
-        )}
-      />
+        ))}
+      </List>
       {error && <p style={{ color: "red" }}>{error.message}</p>}
     </Modal>
   );

@@ -117,9 +117,7 @@ const Heimdall = () => {
           chainId: NEOX_MAINNET.id,
         });
 
-
         burnNo = getBurnNoFromLogs(data.logs);
-
       } catch (e: any) {
         console.error(e);
         setStatus({
@@ -151,7 +149,7 @@ const Heimdall = () => {
       }
     }
   };
-
+  console.log(evmWallet);
   useEffect(() => {
     (async () => {
       if (evmWallet.isConnected && evmWallet.address) {
@@ -186,7 +184,7 @@ const Heimdall = () => {
               {evmWallet.isConnected ? (
                 <ConnectedWalletInput
                   address={evmWallet.address ? evmWallet.address : ""}
-                  walletIcon={`/${evmWallet.connector?.name}.svg`}
+                  walletIcon={evmWallet.connector?.icon}
                   walletName={
                     evmWallet.connector ? evmWallet.connector.name : ""
                   }

@@ -77,7 +77,7 @@ const ClaimNeoPie = () => {
             {evmWallet.isConnected ? (
               <ConnectedWalletInput
                 address={evmWallet.address ? evmWallet.address : ""}
-                walletIcon={`/${evmWallet.connector?.name}.svg`}
+                walletIcon={evmWallet.connector?.icon}
                 walletName={evmWallet.connector ? evmWallet.connector.name : ""}
                 onClear={disconnect}
               />
