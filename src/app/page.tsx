@@ -35,7 +35,7 @@ export default function Home() {
             <Divider type="vertical" style={{ background: "white" }} />
             <Button
               type="link"
-              href="https://github.com/neopieproject/neopie"
+              href="https://github.com/neopieproject"
               target="_blank"
             >
               GitHub

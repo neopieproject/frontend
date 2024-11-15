@@ -155,7 +155,6 @@ const Teleport = () => {
               ) : (
                 <Button
                   size="large"
-                  loading={evmWallet.isConnecting}
                   type="dashed"
                   style={{
                     width: "100%",
