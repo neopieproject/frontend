@@ -13,8 +13,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { theme } from "antd";
 import { createStyles } from "antd-style";
 import Content from "./components/ContentWrapper";
-//@ts-ignore
-import { Galaxy } from "react-stars-particles";
 
 const useStyle = createStyles(({ prefixCls, css }) => ({
   linearGradientButton: css`
@@ -90,7 +88,6 @@ export default function RootLayout({
                       <NavMenu />
                       <div style={{ padding: 18 }}> {children}</div>
                     </Content>
-                    <Galaxy />
                     <NeoWallets />
                     <EVMWallets />
                   </NeoWalletProvider>
