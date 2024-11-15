@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Alert, Button, Card, Space, Typography } from "antd";
+import { Button, Card, Space } from "antd";
 import SwapInput from "../components/SwapInput";
 import { useNeoWallets } from "@/utils/neo/hook";
 import { useAccount, useDisconnect } from "wagmi";
@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 import { neutralizeN3Address } from "@/utils/neo/helpers";
 import { checkIfUnlocked } from "@/utils/neo/teleport";
 import Header from "../components/Header";
+import Status from "../components/Status";
 
 const Heimdall = () => {
   const { openNeoWalletModal, openEvmWalletModal } = useApp();
@@ -25,7 +26,7 @@ const Heimdall = () => {
   const [balance, setBalance] = React.useState<string | undefined>();
   const [status, setStatus] = React.useState<{
     stage: "allowlances" | "approve" | "teleport" | "minting on N3";
-    status: "checking" | "waiting" | "processing" | "success" | "error";
+    status: "preparing" | "sigining" | "processing" | "success" | "error";
     message?: string;
   }>();
 
@@ -43,7 +44,7 @@ const Heimdall = () => {
 
       setStatus({
         stage: "allowlances",
-        status: "checking",
+        status: "preparing",
       });
 
       try {
@@ -63,7 +64,18 @@ const Heimdall = () => {
 
       if (allowances[0] < amount) {
         try {
+          setStatus({
+            stage: "approve",
+            status: "sigining",
+          });
+
           tokenApprovalHash = await approve(NEOX_ONEO_CA, NEOX_HEIMDALL_CA);
+
+          setStatus({
+            stage: "approve",
+            status: "processing",
+          });
+
           await waitForTransactionReceipt(wagmiConfig, {
             hash: tokenApprovalHash,
             chainId: NEOX_MAINNET.id,
@@ -80,7 +92,17 @@ const Heimdall = () => {
 
       if (allowances[1] < ethers.parseUnits("1", 18)) {
         try {
+          setStatus({
+            stage: "approve",
+            status: "sigining",
+          });
           feeApprovalHash = await approve(NEOX_NEO_PIE_CA, NEOX_HEIMDALL_CA);
+
+          setStatus({
+            stage: "approve",
+            status: "processing",
+          });
+
           await waitForTransactionReceipt(wagmiConfig, {
             hash: tokenApprovalHash,
             chainId: NEOX_MAINNET.id,
@@ -95,12 +117,12 @@ const Heimdall = () => {
         }
       }
 
-      setStatus({
-        stage: "teleport",
-        status: "waiting",
-      });
-
       try {
+        setStatus({
+          stage: "teleport",
+          status: "sigining",
+        });
+
         burnHash = await burn(
           NEOX_ONEO_CA,
           neutralizeN3Address(neoWallet.connectedWallet.account.address),
@@ -167,9 +189,9 @@ const Heimdall = () => {
   }, [evmWallet.isConnected]);
   return (
     <>
-      <Header title="Heimdall" description="N3 -> Neo X" />
-      <Space direction="vertical" style={{ maxWidth: "600px" }} size="large">
-        <Space direction="vertical">
+      <Header title="Heimdall" description="$NEO: Neo X -> N3" />
+      <Space direction="vertical" style={{ width: "100%" }} size="large">
+        <Space direction="vertical" style={{ width: "100%" }}>
           <Card>
             <Space direction="vertical" style={{ width: "100%" }}>
               <SwapInput
@@ -238,21 +260,10 @@ const Heimdall = () => {
           </Card>
         </Space>
         {status ? (
-          <Alert
-            message={
-              <div>
-                <Typography.Text>{status.stage}</Typography.Text>:{" "}
-                <Typography.Text>{status.status}</Typography.Text>
-              </div>
-            }
-            type="info"
-            showIcon
-            description={status.message}
-            action={
-              <Button onClick={() => setStatus(undefined)} size="small">
-                Close
-              </Button>
-            }
+          <Status
+            stage={status.stage}
+            status={status.status}
+            onReset={() => setStatus(undefined)}
           />
         ) : (
           <Button

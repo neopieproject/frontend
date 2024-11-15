@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Alert, Button, Card, Space, Typography } from "antd";
+import { Button, Card, Space } from "antd";
 import SwapInput from "../components/SwapInput";
 import { useNeoWallets } from "@/utils/neo/hook";
 import { useAccount, useDisconnect } from "wagmi";
@@ -15,6 +15,7 @@ import {
 } from "@/utils/neo/helpers";
 import { checkIfMinted } from "@/utils/neox/heimdall";
 import Header from "../components/Header";
+import Status from "../components/Status";
 
 const Teleport = () => {
   const { openNeoWalletModal, openEvmWalletModal } = useApp();
@@ -26,7 +27,7 @@ const Teleport = () => {
 
   const [status, setStatus] = React.useState<{
     stage: "teleport" | "minting on Neo X";
-    status: "checking" | "waiting" | "processing" | "success" | "error";
+    status: "signing" | "processing" | "success" | "error";
     message?: string;
   }>();
 
@@ -35,7 +36,7 @@ const Teleport = () => {
       try {
         setStatus({
           stage: "teleport",
-          status: "waiting",
+          status: "signing",
         });
         const destinationAddress = evmWallet.address as string;
         const _txid = await lock(
@@ -96,9 +97,9 @@ const Teleport = () => {
   }, [neoWallet.connectedWallet]);
   return (
     <>
-      <Header title="Teleport" description="Move $NEO from N3 to Neo X." />
-      <Space direction="vertical" style={{ maxWidth: "600px" }} size="large">
-        <Space direction="vertical">
+      <Header title="Teleport" description="$NEO: N3 -> Neo X" />
+      <Space direction="vertical" style={{ width: "100%" }} size="large">
+        <Space direction="vertical" style={{ width: "100%" }}>
           <Card>
             <Space direction="vertical" style={{ width: "100%" }}>
               <SwapInput
@@ -133,7 +134,7 @@ const Teleport = () => {
           </Card>
           <div style={{ textAlign: "center", color: "white" }}>↓↓↓</div>
           <Card>
-            <Space direction="vertical" style={{ maxWidth: "100%" }}>
+            <Space direction="vertical" style={{ width: "100%" }}>
               <SwapInput
                 readOnly={true}
                 icon={"/neox.svg"}
@@ -169,27 +170,10 @@ const Teleport = () => {
         </Space>
 
         {status ? (
-          <Alert
-            message={
-              <>
-                <Typography.Text style={{ textTransform: "capitalize" }} strong>
-                  {status.stage}
-                </Typography.Text>
-                : <Typography.Text>{status.status}</Typography.Text>
-              </>
-            }
-            type="info"
-            description={status.message}
-            action={
-              <Button
-                color="default"
-                variant="filled"
-                onClick={() => setStatus(undefined)}
-                size="small"
-              >
-                Close
-              </Button>
-            }
+          <Status
+            stage={status.stage}
+            status={status.status}
+            onReset={() => setStatus(undefined)}
           />
         ) : (
           <Button

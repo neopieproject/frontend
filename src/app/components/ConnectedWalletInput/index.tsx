@@ -15,7 +15,7 @@ const ConnectedWalletInput = ({
 }: IConnectedWalletInputProps) => {
   return (
     <Input
-      width={"100%"}
+      style={{ width: "100%" }}
       size="large"
       value={address}
       allowClear={true}

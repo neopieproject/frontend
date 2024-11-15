@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import Header from "../components/Header";
-import { Alert, Button, Card, Space, Typography } from "antd";
+import { Button, Card, Space } from "antd";
 import SwapInput from "../components/SwapInput";
 import { useAccount, useDisconnect } from "wagmi";
 import ConnectedWalletInput from "../components/ConnectedWalletInput";
@@ -9,14 +9,15 @@ import { useApp } from "@/hooks";
 import { claim, getClaimableAmount } from "@/utils/neox/ neopie";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { NEOX_MAINNET, wagmiConfig } from "@/wagmi-config";
+import Status from "../components/Status";
 
 const ClaimNeoPie = () => {
   const evmWallet = useAccount();
   const { openEvmWalletModal } = useApp();
   const { disconnect } = useDisconnect();
   const [status, setStatus] = React.useState<{
-    stage: "claiming";
-    status: "signing" | "waiting" | "processing" | "success" | "error";
+    stage: "claim";
+    status: "signing" | "processing" | "success" | "error";
     message?: string;
   }>();
   const [amount, setAmount] = React.useState<string>();
@@ -24,13 +25,13 @@ const ClaimNeoPie = () => {
   const onClaim = async () => {
     try {
       setStatus({
-        stage: "claiming",
+        stage: "claim",
         status: "signing",
       });
       const _txid = await claim();
 
       setStatus({
-        stage: "claiming",
+        stage: "claim",
         status: "processing",
       });
 
@@ -40,13 +41,13 @@ const ClaimNeoPie = () => {
       });
 
       setStatus({
-        stage: "claiming",
+        stage: "claim",
         status: "success",
       });
     } catch (e: any) {
       console.error(e);
       setStatus({
-        stage: "claiming",
+        stage: "claim",
         status: "error",
         message: e.message ? e.message : "An error occurred",
       });
@@ -62,8 +63,8 @@ const ClaimNeoPie = () => {
   }, [status]);
   return (
     <>
-      <Header title="Claim PIE" description="Claim your PIE from ONEO" />
-      <Space direction="vertical" size="large">
+      <Header title="Claim" description="Mucho $PIE from $ONEO" />
+      <Space direction="vertical" style={{ width: "100%" }} size="large">
         <Card>
           <Space direction="vertical" style={{ width: "100%" }}>
             <SwapInput
@@ -96,21 +97,10 @@ const ClaimNeoPie = () => {
           </Space>
         </Card>
         {status ? (
-          <Alert
-            message={
-              <div>
-                <Typography.Text>{status.stage}</Typography.Text>:{" "}
-                <Typography.Text>{status.status}</Typography.Text>
-              </div>
-            }
-            type="info"
-            showIcon
-            description={status.message}
-            action={
-              <Button onClick={() => setStatus(undefined)} size="small">
-                Close
-              </Button>
-            }
+          <Status
+            stage={status.stage}
+            status={status.status}
+            onReset={() => setStatus(undefined)}
           />
         ) : (
           <Button

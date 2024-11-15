@@ -38,13 +38,13 @@ const SwapInput = ({
         <Text style={{ fontSize: "12px" }}>{title}</Text>
       </Space>
       <Input
-        width={"100%"}
         readOnly={readOnly}
         value={value}
         onChange={(e) => handleInputChange(e.target.value)}
         size="large"
         placeholder="0"
         style={{
+          width: "100%",
           textAlign: "right",
         }}
         suffix={
