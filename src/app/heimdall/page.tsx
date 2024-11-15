@@ -214,7 +214,6 @@ const Heimdall = () => {
                 />
               ) : (
                 <Button
-                  loading={evmWallet.isConnecting}
                   type="dashed"
                   style={{
                     width: "100%",
